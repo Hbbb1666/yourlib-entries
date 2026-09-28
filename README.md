@@ -3,6 +3,8 @@
 `index.html` 是 YourLib 攻击库 / 防御库 / Buff 库的可引用条目总览，单文件、无外部依赖，
 可以直接作为静态站点发布。
 
+已发布地址：<https://hbbb1666.github.io/yourlib-entries/>
+
 ## 更新页面
 
 页面内容由源码注解生成，不要手改 `index.html`：
