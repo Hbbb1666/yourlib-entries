@@ -1,24 +1,31 @@
-# YourLib 条目总览页
+# YourLib 站点
 
-`index.html` 是 YourLib 攻击库 / 防御库 / Buff 库的可引用条目总览，单文件、无外部依赖，
-可以直接作为静态站点发布。
+两个页面，共用 `assets/site.css` 一套样式，都由 `yourlib\tools\gen-site.ps1` 生成，
+**不要手改这里生成出来的文件**：
 
-已发布地址：<https://hbbb1666.github.io/yourlib-entries/>
+| 文件 | 内容 | 已发布地址 |
+| --- | --- | --- |
+| `about.html` | 模组详细介绍 | <https://hbbb1666.github.io/yourlib-entries/about.html> |
+| `index.html` | 69 条可引用条目总览（带搜索与分级筛选） | <https://hbbb1666.github.io/yourlib-entries/> |
 
-## 更新页面
+两页顶部互有导航，介绍页的模块卡片会深链到条目页的对应分区。
 
-页面内容由源码注解生成，不要手改 `index.html`：
+## 更新
+
+条目页由源码注解生成，介绍页是模板散文，一次命令同时重新生成两页：
 
 ```powershell
-pwsh -File yourlib\tools\gen-entry-page.ps1
+pwsh -File yourlib\tools\gen-site.ps1
+git -C _site commit -am "update pages"; git -C _site push
 ```
 
-这会把同一份内容写到两个地方：
+生成器会写四处：
 
-- `docs\yourlib-entries.html` —— 仓库内查看用
-- `_site\index.html` —— 发布用（GitHub Pages 认这个文件名）
+- `_site\about.html`、`_site\index.html`、`_site\assets\site.css` —— 发布用
+- `docs\yourlib-entries.html` —— 仓库内查看用的同一份条目页
 
-改完条目或分级后重新生成，再提交推送即可。
+介绍页的正文在 `yourlib\tools\about-page.template.html`，改文案改那个文件；
+条目页的模板是 `yourlib\tools\entry-page.template.html`，样式是 `yourlib\tools\site.css`。
 
 ## 发布到 GitHub Pages
 

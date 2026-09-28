@@ -5,129 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YourLib 可引用条目总览</title>
 <meta name="description" content="YourLib（Minecraft Forge 1.20.1 前置库）的攻击库、防御库与 Buff 库全部可引用条目清单。">
-<!-- Inline icon: without it the browser asks the host for /favicon.ico and the page logs a 404.
-     Keeping it as a data URI preserves the single-file property. -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233f5bd9'/><text x='16' y='23' font-size='19' font-family='monospace' fill='%23ffffff' text-anchor='middle'>Y</text></svg>">
-<style>
-  :root {
-    --bg: #f7f8fa;
-    --panel: #ffffff;
-    --line: #e4e7ec;
-    --text: #1f2430;
-    --muted: #6b7280;
-    --faint: #9aa1ad;
-    --accent: #3f5bd9;
-    --stable: #2f7d5d;
-    --stable-bg: #e8f5ef;
-    --aggr: #a55a11;
-    --aggr-bg: #fdf1e3;
-    --conf: #2b6ca8;
-    --conf-bg: #e8f1fa;
-    --mono: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, "Liberation Mono", monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #14161a;
-      --panel: #1b1e24;
-      --line: #2a2f37;
-      --text: #e6e8ec;
-      --muted: #a2a9b4;
-      --faint: #767d88;
-      --accent: #8ea2ff;
-      --stable: #6fd0a5;
-      --stable-bg: #1d2c26;
-      --aggr: #e5a765;
-      --aggr-bg: #2e2418;
-      --conf: #86bbe6;
-      --conf-bg: #1a2530;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: 15px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-    -webkit-text-size-adjust: 100%;
-  }
-  .wrap { max-width: 940px; margin: 0 auto; padding: 40px 20px 72px; }
-
-  header h1 { margin: 0 0 6px; font-size: 27px; letter-spacing: -0.01em; }
-  header .sub { margin: 0; color: var(--muted); }
-  header .meta { margin: 10px 0 0; color: var(--faint); font-size: 13px; }
-
-  .controls {
-    position: sticky; top: 0; z-index: 5;
-    margin: 22px 0 8px; padding: 12px;
-    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-  }
-  .controls input {
-    flex: 1 1 220px; min-width: 180px;
-    padding: 9px 12px; font: inherit; color: var(--text);
-    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
-  }
-  .controls input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip {
-    padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer;
-    color: var(--muted); background: transparent;
-    border: 1px solid var(--line); border-radius: 999px;
-  }
-  .chip:hover { color: var(--text); }
-  .chip[aria-pressed="true"] { color: #fff; background: var(--accent); border-color: var(--accent); }
-
-  section { margin-top: 34px; }
-  section h2 {
-    margin: 0 0 4px; font-size: 19px;
-    display: flex; align-items: baseline; gap: 10px;
-  }
-  section h2 .n { color: var(--faint); font-size: 13px; font-weight: 400; }
-  section .lede { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
-
-  .entry {
-    padding: 14px 16px; margin-bottom: 10px;
-    background: var(--panel); border: 1px solid var(--line);
-    border-left: 3px solid var(--stable); border-radius: 10px;
-  }
-  .entry[data-tier="AGGRESSIVE"] { border-left-color: var(--aggr); }
-  .entry[data-tier="CONFIGURED"] { border-left-color: var(--conf); }
-  .entry[hidden] { display: none; }
-  .head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .name {
-    font-family: var(--mono); font-size: 14px; color: var(--text);
-    text-decoration: none; word-break: break-all;
-  }
-  .name:hover { color: var(--accent); text-decoration: underline; }
-  .badge {
-    margin-left: auto; padding: 2px 9px; font-size: 12px; white-space: nowrap;
-    border-radius: 999px; color: var(--stable); background: var(--stable-bg);
-  }
-  .entry[data-tier="AGGRESSIVE"] .badge { color: var(--aggr); background: var(--aggr-bg); }
-  .entry[data-tier="CONFIGURED"] .badge { color: var(--conf); background: var(--conf-bg); }
-  .desc { margin: 8px 0 0; }
-  .meta { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag {
-    font-size: 12px; padding: 2px 8px; border-radius: 6px;
-    color: var(--muted); background: var(--bg); border: 1px solid var(--line);
-  }
-  .tag.recipe { color: var(--accent); }
-  .en { margin: 8px 0 0; color: var(--faint); font-size: 13px; }
-
-  .empty { margin-top: 30px; color: var(--muted); }
-  footer {
-    margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
-    color: var(--faint); font-size: 13px;
-  }
-  footer a { color: var(--accent); }
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
+<nav class="topbar">
+  <div class="inner">
+    <a class="brand" href="./about.html">YourLib<span>Forge 1.20.1</span></a>
+    <span class="links">
+      <a href="./about.html">模组介绍</a>
+      <a href="./index.html" aria-current="page">条目总览</a>
+    </span>
+  </div>
+</nav>
+
 <div class="wrap">
   <header>
-    <h1>YourLib 可引用条目总览</h1>
-    <p class="sub">Minecraft Forge 1.20.1 前置库 · 攻击库、防御库与 Buff 库的全部可调用手段</p>
-    <p class="meta">共 <strong id="total">0</strong> 条条目 · 由源码注解生成 <span id="generated">2026-09-28</span></p>
+    <h1>可引用条目总览</h1>
+    <p class="sub">攻击库、防御库与 Buff 库的全部可调用手段，由源码注解生成</p>
+    <p class="meta">共 <strong id="total">0</strong> 条条目 · 生成于 <span id="generated">2026-09-28</span></p>
   </header>
 
   <div class="controls">
@@ -149,6 +45,7 @@
     <code>docs/YourLib-API清单.md</code>，缺行时回退为注解里的英文原句。
     稳定级默认可用；激进级需由下游显式开启，可能破坏平衡或与其它模组冲突；
     标注「需配置」的条目要先在配置文件中放行。仅供库内部使用的管线条目（分级为内部）不在本页列出。
+    <br>想了解这个库本身能做什么，见 <a href="./about.html">模组介绍</a>。
   </footer>
 </div>
 

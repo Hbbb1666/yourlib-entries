@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YourLib — Minecraft Forge 1.20.1 前置库</title>
+<meta name="description" content="YourLib 是 Minecraft Forge 1.20.1 的前置库模组：不添加玩法内容，只提供事件调度、攻防结算、状态标记、物品保护与渲染的可调用能力。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233f5bd9'/><text x='16' y='23' font-size='19' font-family='monospace' fill='%23ffffff' text-anchor='middle'>Y</text></svg>">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<nav class="topbar">
+  <div class="inner">
+    <a class="brand" href="./about.html">YourLib<span>Forge 1.20.1</span></a>
+    <span class="links">
+      <a href="./about.html" aria-current="page">模组介绍</a>
+      <a href="./index.html">条目总览</a>
+    </span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <h1>YourLib</h1>
+    <p class="sub">Minecraft Forge 1.20.1 的前置库模组。它不添加方块、物品、生物或玩法，只提供一套可编程的干预能力。</p>
+    <p class="meta">
+      modid <code>yourlib</code> · 版本 0.1.0 · Forge 47.x · 无前置依赖 · 客户端为主，服务端做兼容
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="./index.html">查看全部 69 条可引用条目 →</a>
+      <a class="btn" href="#dev">开发者接入</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>它解决什么问题</h2>
+    <p class="lede">高机制 RPG 模组要做的事高度重叠：改这一击打出多少、拦截一次死亡、给实体打一个跨维度保留的标记、让某件物品不可摧毁、在世界里画一个法阵。这些活每个模组都要各自硬写一遍，而且互相踩踏——两个模组都想取消死亡事件时，结果取决于谁注册得更晚。</p>
+    <p class="lede">YourLib 把它们收敛成一组稳定的调用接口：下游只依赖它的 api 层，不必知道底层是 Forge 还是别的加载器，也不必再各自重写事件优先级与伤害管线。</p>
+  </section>
+
+  <section>
+    <h2>设计原则</h2>
+    <div class="cols">
+      <div class="card plain">
+        <h3>未激活时零影响</h3>
+        <p>没有下游注册任何东西时，所有能力保持休眠，不改变游戏行为。监听器虽然常驻注册，但每条热路径开头先判断「是否被武装过」，没有就直接返回。</p>
+      </div>
+      <div class="card plain">
+        <h3>分级授权</h3>
+        <p>稳定级能力默认可用；激进级会直接改写实体状态、可能破坏平衡或与其他模组硬冲突，必须由下游显式开启。</p>
+      </div>
+      <div class="card plain">
+        <h3>边界诚实</h3>
+        <p>不承诺绝对免疫。能覆盖什么、覆盖不了什么，全部写在文档与页面上，包括下面那份清单。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>能力模块 <span class="n">点开可跳到条目页对应分区</span></h2>
+    <p class="lede">卡片的链接指向条目页里对应的分区，括号里是该模块的条目数量。</p>
+    <div class="cols">
+      <a class="card plain" href="./index.html">
+        <h3>调用入口与分级</h3>
+        <p>所有能力从单一门面取用。每条可引用条目都带运行时注解，标明家族、分级与前置条件，反编译也能读到。</p>
+      </a>
+      <a class="card plain" href="./index.html#event">
+        <h3>事件与调度</h3>
+        <p>自有事件总线：Lambda 注册、无反射开销、异常隔离、重复注册去重；免死走一条独立的裁决事件。</p>
+      </a>
+      <a class="card plain" href="./index.html#attack">
+        <h3>统一免死与穿透裁决</h3>
+        <p>纯 Java 裁决器，不依赖 Minecraft。多个模组同时表态时，由固定规则给出唯一结果，而不是看谁注册得晚。</p>
+      </a>
+      <a class="card" href="./index.html#attack">
+        <h3>攻击库 <span class="tagline">33 条</span></h3>
+        <p>逐武器穿透与减伤免疫、独立暴击、锚定伤害（定量伤害）、佩戴者穿透光环、真实伤害、分层击杀链、伤害债务。</p>
+      </a>
+      <a class="card" href="./index.html#defence">
+        <h3>防御库 <span class="tagline">17 条</span></h3>
+        <p>免死、锁血、硬化、图腾封锁、来源免疫、击退免疫、暴击抗性、伤害反弹，以及把上述串成一次配置的链式入口。</p>
+      </a>
+      <a class="card" href="./index.html#state">
+        <h3>Buff 库（状态与标记） <span class="tagline">5 条</span></h3>
+        <p>不占用原版效果通道的定时 Buff，可定义为不可清除；带分级的 UUID 标记，玩家标记跨维度保留，实体离开世界时自动清理。</p>
+      </a>
+      <a class="card" href="./index.html#defence">
+        <h3>物品保护与灵魂绑定</h3>
+        <p>按标志位保护物品：防火、防仙人掌、防铁砧、防漂浮消失、掉入虚空返还、轮廓发光。绑定物品记住主人与快照，被丢弃或被指令清除后回到主人手中，数据写入世界存档。</p>
+      </a>
+      <a class="card" href="./index.html#movement">
+        <h3>移动与跳跃</h3>
+        <p>限制传送与跨维度，覆盖末影人传送、<code>/tp</code>、紫颂果、末影珍珠、<code>/spreadplayers</code>；以及跳跃高度乘数。</p>
+      </a>
+      <a class="card" href="./index.html#render">
+        <h3>渲染与视觉 <span class="tagline">7 条</span></h3>
+        <p>服务端触发、客户端绘制的世界空间特效：光环、六芒星法阵、自上而下的光柱、地面环形法阵；另有自定义着色器、悬停面板、动态文字与 HUD 状态行。特效按客户端 tick 计时，不同帧率下寿命一致。</p>
+      </a>
+      <a class="card plain" href="./index.html">
+        <h3>网络</h3>
+        <p>一条自带通道，把特效从服务端下发到客户端。普通下游模组一般不需要直接接触。</p>
+      </a>
+      <a class="card plain" href="./index.html">
+        <h3>配置驱动</h3>
+        <p>六份可选配置文件：武器模板、客户端绘制分级与特效护栏、Buff 强制清除开关、Mixin 注入开关、兼容探针、死亡门控字段别名。整合包作者不写代码也能用。</p>
+      </a>
+      <a class="card plain" href="./index.html#compat">
+        <h3>安全、兼容与移植</h3>
+        <p>击杀账本防止同一目标被重复结算；实体离开世界与玩家下线时清理记录，避免长跑服务器内存缓慢增长。api 与 core 两层不引用任何加载器包，构建期有脚本强制检查，同一份代码可编译在 ForgeGradle 与 Fabric Loom 下；换 Minecraft 版本等于换一个桥接模块。</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>应用前景</h2>
+    <div class="cols">
+      <div class="card plain">
+        <h3>高机制 RPG 整合包</h3>
+        <p>免死、锁血、图腾封锁、伤害债务、反弹、宿敌、定量伤害这一整套，正好对应 Boss 战、多阶段战斗、神器体系、软锁机制与剧情杀。以往要自己啃事件优先级与伤害管线，现在可以直接调用。</p>
+      </div>
+      <div class="card plain">
+        <h3>服务端 RPG 服务器</h3>
+        <p>标记跨维度保留、实体离开世界自动清理、击杀账本防重复结算、异常隔离不影响其它模组。玩家数据与绑定物品写入世界存档，不依赖玩家在线状态。</p>
+      </div>
+      <div class="card plain">
+        <h3>内容创作者的「OP 级」工具</h3>
+        <p>活动、剧情、调试，或需要让平衡性作废的特殊物品，可以一次性调用全部激进级手段；平时只用稳定级，不影响整合包平衡。</p>
+      </div>
+      <div class="card plain">
+        <h3>前置库生态</h3>
+        <p>多个 RPG 模组共存时，最容易出问题的不是功能本身，而是两个模组都想取消死亡事件、都想改同一件武器的伤害。统一裁决与固定规则减少这类相互踩踏。</p>
+      </div>
+      <div class="card plain">
+        <h3>整合包作者无需写代码</h3>
+        <p>武器模板与客户端护栏用配置文件完成，适合不想动 Java 的整合包作者。</p>
+      </div>
+      <div class="card plain">
+        <h3>跨加载器与跨版本</h3>
+        <p>api 与 core 不依赖加载器，为后续向 NeoForge、Fabric 与更高版本迁移留出空间。Forge 1.21.1 已完成构建与启动验证，其余版本在推进中。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>边界声明</h2>
+    <p class="lede">免死与穿透依赖目标的伤害与死亡路径经过 Forge 的事件链。以下情况无法介入：</p>
+    <div class="card warn">
+      <ul class="limits">
+        <li>目标用 <code>Unsafe</code> 直接写内存</li>
+        <li>CoreMod 级字节码替换</li>
+        <li>用 Mixin 完全绕开 Forge 事件链的死亡</li>
+        <li>CoreMod 直接接管实体管理</li>
+        <li>用 LWJGL 内部通道移除实体</li>
+        <li>Iris / Oculus 完全接管渲染管线</li>
+      </ul>
+      <p>另外：完全无敌（<code>isInvulnerableTo</code> 恒为真）的目标不会触发伤害事件；绕过 <code>setHealth</code> 直接写血量数据的目标，落地加固拦不住。</p>
+      <p><strong>没有被 YourLib 标记过的物品和实体，完全不受影响。</strong></p>
+    </div>
+  </section>
+
+  <section id="dev">
+    <h2>开发者接入</h2>
+    <p class="lede">在 <code>mods.toml</code> 里声明依赖：</p>
+<pre><code>[[dependencies.myRpgMod]]
+    modId = "yourlib"
+    mandatory = true
+    versionRange = "[0.1,1.0)"
+    ordering = "AFTER"
+    side = "BOTH"</code></pre>
+    <p class="lede" style="margin-top:16px">然后在代码里通过门面调用：</p>
+<pre><code>YourLibApi api = YourLibApi.instance();
+
+// 给玩家免死，并让手上的剑稳定级穿透护甲与附魔保护
+api.combat().immortality(player.getUUID(), 0.5F, CancelPriority.BLOCKING);
+api.combat().profile(ItemKey.of(sword))
+        .penetration(WeaponPenetrationProfile.of(Set.of(
+                DefenseType.PERCENTAGE_REDUCTION,
+                DefenseType.ENCHANTMENT_PROTECTION), 1.0F))
+        .universalReductionImmunity(1.0F);</code></pre>
+    <p class="lede" style="margin-top:16px">完整条目清单见<a href="./index.html">条目总览</a>；随 jar 一起分发的还有 <code>META-INF/yourlib-api-catalogue.md</code> 与源码 jar，便于检索与二次开发。</p>
+  </section>
+
+  <section>
+    <h2>当前状态</h2>
+    <div class="card">
+      <p>版本 0.1.0 的骨架与核心闭环已经可用，并在真实 Forge 1.20.1 客户端与服务端实测加载通过：模组注册、Mixin 注入、事件桥接、着色器注册均正常，无致命错误。</p>
+      <p>已知未完成项：</p>
+      <ul class="limits">
+        <li><code>YourLibShaders</code> 的多边形与星空着色器目前只有定义注册表，GLSL 载荷待补</li>
+        <li>反监听与动态 Mixin 注入目前是预留开关，尚无运行时行为</li>
+      </ul>
+      <p>以上两项不影响现有能力的正常使用。</p>
+    </div>
+  </section>
+
+  <footer>
+    本页内容随源码维护（<code>yourlib\tools\about-page.template.html</code>），生成于 2026-09-28。
+    全部可引用条目见 <a href="./index.html">条目总览</a>。
+  </footer>
+</div>
+</body>
+</html>
