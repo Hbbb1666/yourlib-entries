@@ -150,7 +150,7 @@
         <li>CoreMod 级字节码替换</li>
         <li>用 Mixin 完全绕开 Forge 事件链的死亡</li>
         <li>CoreMod 直接接管实体管理</li>
-        <li>用 LWJGL 内部通道移除实体</li>
+        <li>用 JNI 或本地库直接改写进程内存（Java 层的一切手段都看不到这一层）</li>
         <li>Iris / Oculus 完全接管渲染管线</li>
       </ul>
       <p>另外：完全无敌（<code>isInvulnerableTo</code> 恒为真）的目标不会触发伤害事件；绕过 <code>setHealth</code> 直接写血量数据的目标，落地加固拦不住。</p>
@@ -194,7 +194,7 @@ api.combat().profile(ItemKey.of(sword))
   </section>
 
   <footer>
-    本页内容随源码维护（<code>yourlib\tools\about-page.template.html</code>），生成于 2026-09-28。
+    本页内容随源码维护（<code>yourlib\tools\about-page.template.html</code>），生成于 2026-09-29。
     全部可引用条目见 <a href="./index.html">条目总览</a>。
   </footer>
 </div>
